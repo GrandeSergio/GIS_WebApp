@@ -1,0 +1,49 @@
+.featureInfoOverlay {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  overflow: auto;
+}
+
+.featureInfoContent {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.featureRow {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.featureKey {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #555;
+}
+
+.featureValue {
+  color: #000;
+}
+
+h4 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 10px 0;
+}
+.featureSection {
+  margin-bottom: 15px;
+}
+
+.featureSection strong {
+  color: #007bff;
+}

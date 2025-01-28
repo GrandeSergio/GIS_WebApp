@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS WebApp</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v6.6.0/css/ol.css" type="text/css">
+    <script src="https://openlayers.org/en/v6.6.0/build/ol.js" type="text/javascript"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <h1>Regions Map</h1>
+    <div id="map"></div>
+    <script>
+
+const map = new ol.Map({
+    target: 'map',
+    layers: [
+        new ol.layer.Tile({
+            source: new ol.source.OSM(),
+        }),
+    ],
+    view: new ol.View({
+        center: ol.proj.fromLonLat([0, 0]), // Adjust to your data's region
+        zoom: 4,
+    }),
+});
+
+const staticGeoJSON = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [0, 0]
+      },
+      "properties": {
+        "name": "Test Point"
+      }
+    }
+  ]
+};
+
+// Add GeoJSON layer
+fetch('/WebApp/regions/geojson/')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Fetched GeoJSON:', data);
+
+    const geojsonSource = new ol.source.Vector({
+      features: new ol.format.GeoJSON().readFeatures(data, {
+        dataProjection: 'EPSG:3857', // Your GeoJSON's CRS
+        featureProjection: 'EPSG:3857', // OpenLayers map's CRS
+
+      }),
+    });
+
+    const geojsonLayer = new ol.layer.Vector({
+      source: geojsonSource,
+    });
+    map.addLayer(geojsonLayer);
+
+
+
+  })
+  .catch(error => console.error('Error fetching or processing GeoJSON:', error));
+    </script>
+</body>
+</html>
