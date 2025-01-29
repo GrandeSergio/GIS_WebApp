@@ -3,6 +3,12 @@ import { Button, Form, Dropdown } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { SmallSpinner } from './Loader';
 import WmsIcon from '../icons/wms.svg';
+import { SketchPicker } from 'react-color';
+import Style from 'ol/style/Style';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
+import { StyleHandler, LabelHandler } from '../handlers/LayerHandler';
+import { useEffect, useRef } from 'react';
 
 /**
  * Navigation component to manage layers and other related functionalities.
@@ -40,6 +46,53 @@ const Navigation = ({
    */
   const [loadingLayers, setLoadingLayers] = useState({});
 
+  const [activeLayerColor, setActiveLayerColor] = useState({});
+  const [showColorPicker, setShowColorPicker] = useState({});
+
+  const styleHandler = new StyleHandler(
+    layers,
+    setActiveLayerColor,
+    setShowColorPicker
+  );
+  const labelHandler = new LabelHandler(layers, activeLayerColor);
+  const [labelPanel, setLabelPanel] = useState({
+    isOpen: false,
+    layerId: null,
+  });
+
+  const [currentAttributes, setCurrentAttributes] = useState([]); // Stan na atrybuty warstwy
+  const labelHandlerRef = useRef(null);
+  const closeLabelPanel = () => {
+    setLabelPanel({ isOpen: false, layerId: null });
+  };
+
+  const openLabelPanel = (layerId) => {
+    setLabelPanel({ isOpen: true, layerId });
+
+    const selectedLayer = layers.find((layer) => layer.id === layerId);
+    if (selectedLayer && selectedLayer.isVector) {
+      const source = selectedLayer.layer.getSource();
+      const features = source.getFeatures();
+
+      const attributes =
+        features.length > 0
+          ? Object.keys(features[0].getProperties()).filter(
+              (attr) => attr !== 'geometry'
+            )
+          : [];
+
+
+      setCurrentAttributes(attributes); // Ustaw stan na atrybuty
+    } else {
+      console.error('Layer is not vector or invalid');
+      setCurrentAttributes([]);
+    }
+  };
+
+  useEffect(() => {
+    labelHandlerRef.current = new LabelHandler(layers, activeLayerColor); // Przypisanie do referencji
+  }, [layers, activeLayerColor]);
+
   return (
     <div style={{ display: 'flex', height: '100%' }}>
       {/* Navigation Sidebar */}
@@ -54,7 +107,7 @@ const Navigation = ({
           paddingTop: '20px',
         }}
       >
-        {/* Layers icon */}
+        {/* Layers button */}
         <Button
           variant="light"
           onClick={() => setShowLayersPanel(!showLayersPanel)}
@@ -71,7 +124,7 @@ const Navigation = ({
         >
           <i className="bi bi-layers" style={{ fontSize: '24px' }}></i>
         </Button>
-        {/* Przykład innych ikon */}
+        {/* Zoom */}
         <Button
           variant="light"
           title="Zoom"
@@ -235,9 +288,7 @@ const Navigation = ({
                     disabled={layer.loading}
                     label={
                       layer.name.length > 14 ? (
-                        <span>
-                          {layer.name}
-                        </span>
+                        <span>{layer.name}</span>
                       ) : (
                         layer.name
                       )
@@ -247,7 +298,18 @@ const Navigation = ({
                   />
                 </div>
                 {layer.isVector && (
-                  <Dropdown align="end">
+                  <Dropdown
+                    align="end"
+                    onToggle={(isOpen) => {
+                      if (!isOpen) {
+                        setLabelPanel({ isOpen: false, layerId: null });
+                        setShowColorPicker((prev) => ({
+                          ...prev,
+                          [layer.id]: false,
+                        }));
+                      }
+                    }}
+                  >
                     <Dropdown.Toggle
                       variant="outline-secondary"
                       size="sm"
@@ -281,6 +343,97 @@ const Navigation = ({
                         ></i>
                         Show Attribute Table
                       </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openLabelPanel(layer.id);
+                        }}
+                        disabled={!layer.hasAttributes}
+                      >
+                        <i
+                          className="bi bi-fonts"
+                          style={{ marginRight: '10px' }}
+                        ></i>
+                        Add Label
+                      </Dropdown.Item>
+                      {/* Przycisk do otwierania pickera */}
+                      <Dropdown.Item
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          styleHandler.toggleColorPicker(layer.id); // Wywołanie metody klasy
+                        }}
+                      >
+                        <i
+                          className="bi bi-palette"
+                          style={{ marginRight: '10px' }}
+                        ></i>
+                        Change style
+                      </Dropdown.Item>
+
+                      {labelPanel.isOpen && labelPanel.layerId === layer.id && (
+                        <div
+                          style={{
+                            padding: '10px',
+                            marginTop: '5px',
+                            borderTop: '1px solid #ddd',
+                            backgroundColor: '#fff',
+                            zIndex: 1050,
+                          }}
+                        >
+                          <h5>Select Column</h5>
+                          <Form.Group>
+                            <Form.Select
+                              onChange={(e) =>
+                                labelHandlerRef.current.addLabelsToLayer(
+                                  labelPanel.layerId,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option>Select a column</option>
+                              {currentAttributes.length > 0 ? (
+                                currentAttributes.map((attr) => (
+                                  <option key={attr}>{attr}</option>
+                                ))
+                              ) : (
+                                <option disabled>
+                                  No attributes available
+                                </option>
+                              )}
+                            </Form.Select>
+                          </Form.Group>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={closeLabelPanel}
+                          >
+                            Close
+                          </Button>
+                        </div>
+                      )}
+
+                      {showColorPicker[layer.id] && (
+                        <div
+                          style={{
+                            padding: '10px',
+                            borderTop: '1px solid #ddd',
+                          }}
+                        >
+                          <SketchPicker
+                            color={
+                              activeLayerColor[layer.id] || {
+                                r: 255,
+                                g: 255,
+                                b: 255,
+                                a: 1,
+                              }
+                            }
+                            onChange={(color) =>
+                              styleHandler.handleColorChange(layer.id, color)
+                            } // Wywołanie metody klasy
+                          />
+                        </div>
+                      )}
                     </Dropdown.Menu>
                   </Dropdown>
                 )}

@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a99ae727-7872-4f96-8191-109187d03df8" name="Changes" comment="" />
+    <list default="true" id="a99ae727-7872-4f96-8191-109187d03df8" name="Changes" comment="Add initial GIS WebApp with frontend, backend, and map setup&#10;&#10;Introduce a React-based frontend with Bootstrap integration, including components for WMS layer management, an interactive attribute table, and basemap handling. Backend setup includes a Django framework configured with basic files to support the application. A base template integrates OpenLayers for map visualization.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/AttributeTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/AttributeTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/FeatureInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/FeatureInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/Map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/Navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/Navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/constants/basemaps.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/constants/basemaps.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/LayerHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/LayerHandler.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,11 +28,15 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="2VRvhbFLZYxi0teBkuabRY3LJvT" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -30,7 +44,9 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/PycharmProjects/GISWebApp&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
@@ -57,6 +73,30 @@
       <option name="presentableId" value="Default" />
       <updated>1694811826543</updated>
     </task>
+    <task id="LOCAL-00001" summary="Add initial GIS WebApp with frontend, backend, and map setup&#10;&#10;Introduce a React-based frontend with Bootstrap integration, including components for WMS layer management, an interactive attribute table, and basemap handling. Backend setup includes a Django framework configured with basic files to support the application. A base template integrates OpenLayers for map visualization.">
+      <option name="closed" value="true" />
+      <created>1738082122098</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1738082122099</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add initial GIS WebApp with frontend, backend, and map setup&#10;&#10;Introduce a React-based frontend with Bootstrap integration, including components for WMS layer management, an interactive attribute table, and basemap handling. Backend setup includes a Django framework configured with basic files to support the application. A base template integrates OpenLayers for map visualization." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add initial GIS WebApp with frontend, backend, and map setup&#10;&#10;Introduce a React-based frontend with Bootstrap integration, including components for WMS layer management, an interactive attribute table, and basemap handling. Backend setup includes a Django framework configured with basic files to support the application. A base template integrates OpenLayers for map visualization." />
   </component>
 </project>

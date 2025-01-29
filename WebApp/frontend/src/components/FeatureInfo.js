@@ -2,9 +2,8 @@ import 'ol/ol.css';
 import { Overlay } from 'ol';
 import styles from '../styles/FeatureInfo.module.css'; // Import CSS Module
 
-
 class FeatureInfo {
-/**
+  /**
    * Creates an instance of FeatureInfo.
    * @param {Object} map - The OpenLayers map object to which the overlay will be attached.
    */
@@ -36,14 +35,14 @@ class FeatureInfo {
     document.addEventListener('closeOverlay', this.handleCloseOverlay);
   }
 
-/**
+  /**
    * Handles the closing of the overlay by hiding it and updating its ARIA state.
    */
   handleCloseOverlay() {
     this.overlay.setPosition(undefined);
   }
 
-/**
+  /**
    * Handles the map click event to display feature information overlay.
    * @param {Object} event - The map click event containing the clicked pixel and other data.
    */
@@ -55,7 +54,7 @@ class FeatureInfo {
 
     if (clickedFeatures.size > 0) {
       const featureInfo = Array.from(clickedFeatures).map((feature) =>
-      /**
+        /**
          * Extracts the properties of the clicked feature to display.
          */
         feature.getProperties()
@@ -65,7 +64,7 @@ class FeatureInfo {
        */
       this.displayFeatureInfo(event.coordinate, featureInfo);
     } else {
-    /**
+      /**
        * Hides the overlay if no features were clicked.
        */
       this.overlay.setPosition(undefined);
@@ -129,7 +128,7 @@ class FeatureInfo {
     this.overlay.setPosition(coordinate);
   }
 
-/**
+  /**
    * Cleans up event listeners and removes the overlay when FeatureInfo is destroyed.
    */
   cleanup() {

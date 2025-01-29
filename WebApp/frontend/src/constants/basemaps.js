@@ -8,7 +8,7 @@ import XYZ from 'ol/source/XYZ';
  * and the OpenLayers TileLayer defining its source.
  */
 export const basemaps = [
-/**
+  /**
    * OpenStreetMap basemap configuration.
    * @property {string} id - Unique identifier for the basemap.
    * @property {string} name - Display name of the basemap.
@@ -24,13 +24,13 @@ export const basemaps = [
     }),
   },
   {
-  /**
-   * Google Satellite basemap configuration.
-   * @property {string} id - Unique identifier for the basemap.
-   * @property {string} name - Display name of the basemap.
-   * @property {boolean} active - Indicates whether the basemap is active.
-   * @property {TileLayer} layer - OpenLayers layer object for the basemap.
-   */
+    /**
+     * Google Satellite basemap configuration.
+     * @property {string} id - Unique identifier for the basemap.
+     * @property {string} name - Display name of the basemap.
+     * @property {boolean} active - Indicates whether the basemap is active.
+     * @property {TileLayer} layer - OpenLayers layer object for the basemap.
+     */
     id: 'google-satellite',
     name: 'Google Satellite',
     active: false,

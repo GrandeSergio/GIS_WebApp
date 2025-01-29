@@ -7,7 +7,7 @@ import { layers } from '../constants/layers';
 import FeatureInfo from './FeatureInfo';
 import AttributeTable from './AttributeTable';
 import { EnableInformationButton, BasemapContainer } from './MapElements';
-import { ToggleLayerVisibility, reorderLayers } from '../handlers/LayerHandler';
+import { ToggleLayerVisibility, reorderLayers, LabelHandler } from '../handlers/LayerHandler';
 import LayerZoom from '../handlers/MapInteractions';
 import BasemapHandler from '../handlers/BasemapHandler';
 import AttributeTableHandler from '../handlers/AttributeTableHandler';
@@ -34,11 +34,12 @@ const MapComponent = () => {
   const [layersState, setLayers] = useState(layers);
 
   const [infoEnabled, setInfoEnabled] = useState(false);
+  const labelHandlerRef = useRef(null);
 
-/**
- * Initializes the map on the component's first render.
- * Cleans up the map instance when the component unmounts.
- */
+  /**
+   * Initializes the map on the component's first render.
+   * Cleans up the map instance when the component unmounts.
+   */
   useEffect(() => {
     const initialMap = initializeMap(
       mapRef,
@@ -48,14 +49,27 @@ const MapComponent = () => {
     );
     setMap(initialMap);
 
+    initialMap.on('moveend', () => {
+        layersState.forEach((layer) => {
+            if (
+                layer.layer &&
+                layer.layer.getVisible() &&
+                layer.isVector &&
+                labelHandlerRef.current
+            ) {
+                labelHandlerRef.current.refreshLabels(layer.id);
+            }
+        });
+    });
+
     return () => {
       initialMap.setTarget(null); // Cleanup
     };
   }, []);
 
-/**
- * Toggles the feature info functionality based on the `infoEnabled` state.
- */
+  /**
+   * Toggles the feature info functionality based on the `infoEnabled` state.
+   */
   useEffect(() => {
     if (infoEnabled) {
       if (!featureInfoRef.current) {
@@ -69,9 +83,9 @@ const MapComponent = () => {
     }
   }, [infoEnabled, map]);
 
-/**
- * Initializes map handlers once the map instance is available.
- */
+  /**
+   * Initializes map handlers once the map instance is available.
+   */
   useEffect(() => {
     if (map) {
       toggleLayerVisibilityInstance.current = new ToggleLayerVisibility(
@@ -95,83 +109,98 @@ const MapComponent = () => {
         setLayers,
         setShowAddWMSLayerModal
       );
+      labelHandlerRef.current = new LabelHandler(layersState);
+      map.on('moveend', () => {
+
+          layersState.forEach((layer) => {
+            if (
+              layer.layer &&
+              layer.layer.getVisible() &&
+              layer.isVector &&
+              labelHandlerRef.current
+            ) {
+              console.log(`Refreshing labels on moveend for layer: ${layer.id}`);
+              labelHandlerRef.current.refreshLabels(layer.id);
+            }
+          });
+      });
     }
   }, [map, layersState, basemapState]);
 
-/**
- * Toggles the visibility of a layer on the map.
- * @param {string} layerId - The ID of the layer to toggle.
- */
+  /**
+   * Toggles the visibility of a layer on the map.
+   * @param {string} layerId - The ID of the layer to toggle.
+   */
   const handleToggleLayerVisibility = (layerId) => {
     if (toggleLayerVisibilityInstance.current) {
       toggleLayerVisibilityInstance.current.toggle(layerId);
     }
   };
 
-/**
- * Zooms the map to the extent of a given layer.
- * @param {string} layerId - The ID of the layer to zoom to.
- */
+  /**
+   * Zooms the map to the extent of a given layer.
+   * @param {string} layerId - The ID of the layer to zoom to.
+   */
   const handleZoomToLayer = (layerId) => {
     if (LayerZoomRef.current) {
       LayerZoomRef.current.zoomToLayerExtent(layerId);
     }
   };
 
-/**
- * Zooms the map to the extent of a specific feature.
- * @param {Object} featureProperties - Properties of the feature to zoom to.
- */
+  /**
+   * Zooms the map to the extent of a specific feature.
+   * @param {Object} featureProperties - Properties of the feature to zoom to.
+   */
   const handleZoomToFeature = (featureProperties) => {
     if (LayerZoomRef.current) {
       LayerZoomRef.current.zoomToFeature(featureProperties);
     }
   };
 
-/**
- * Changes the active basemap on the map.
- * @param {string} id - The ID of the basemap to switch to.
- */
+  /**
+   * Changes the active basemap on the map.
+   * @param {string} id - The ID of the basemap to switch to.
+   */
   const handleBasemapChange = (id) => {
     if (basemapHandlerRef.current) {
       basemapHandlerRef.current.changeBasemap(id);
     }
   };
 
-/**
- * Displays the attribute table for the target layer.
- * @param {Object} targetLayer - The layer whose attributes are displayed.
- */
+  /**
+   * Displays the attribute table for the target layer.
+   * @param {Object} targetLayer - The layer whose attributes are displayed.
+   */
   const handleShowAttributeTable = (targetLayer) => {
     if (attributeTableHandlerRef.current) {
       attributeTableHandlerRef.current.showTable(targetLayer);
     }
   };
 
-/**
- * Adds a new WMS (Web Map Service) layer to the map.
- * @param {Object} layerData - Configuration data for the WMS layer.
- */
+  /**
+   * Adds a new WMS (Web Map Service) layer to the map.
+   * @param {Object} layerData - Configuration data for the WMS layer.
+   */
   const handleAddWMSLayer = (layerData) => {
     if (wmsHandlerRef.current) {
       wmsHandlerRef.current.addWMSLayer(layerData);
     }
   };
 
-/**
- * Tracks the source index when dragging a layer in the layer list.
- * @param {DragEvent} e - The drag event.
- * @param {number} index - The index of the layer being dragged.
- */
+  /**
+   * Tracks the source index when dragging a layer in the layer list.
+   * @param {DragEvent} e - The drag event.
+   * @param {number} index - The index of the layer being dragged.
+   */
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('sourceIndex', index);
   };
 
-/**
- * Updates the layer order after a drag-and-drop operation finishes.
- * @param {DragEvent} e - The drop event.
- * @param {number} destinationIndex - The index where the dragged layer is dropped.
- */
+  /**
+   * Updates the layer order after a drag-and-drop operation finishes.
+   * @param {DragEvent} e - The drop event.
+   * @param {number} destinationIndex - The index where the dragged layer is dropped.
+   */
   const handleDrop = (e, destinationIndex) => {
     e.preventDefault();
 
@@ -188,10 +217,10 @@ const MapComponent = () => {
       });
     }
   };
-/**
- * Prevents the default drag-over behavior during a drag-and-drop operation.
- * @param {DragEvent} e - The drag-over event.
- */
+  /**
+   * Prevents the default drag-over behavior during a drag-and-drop operation.
+   * @param {DragEvent} e - The drag-over event.
+   */
   const handleDragOver = (e) => {
     e.preventDefault();
   };
@@ -216,37 +245,42 @@ const MapComponent = () => {
       <div style={{ flex: 1, position: 'relative' }}>
         <Loader loading={loading} />
         <div
-            ref={mapRef}
-            id="map"
-            aria-label="Interactive map"
-            style={{ width: '100%', height: '100%' }} />
+          ref={mapRef}
+          id="map"
+          aria-label="Interactive map"
+          style={{ width: '100%', height: '100%' }}
+        />
 
-            <EnableInformationButton
-              aria-label={infoEnabled ? "Disable feature information" : "Enable feature information"}
-              infoEnabled={infoEnabled}
-              toggleInfo={() => setInfoEnabled(!infoEnabled)}
-            />
+        <EnableInformationButton
+          aria-label={
+            infoEnabled
+              ? 'Disable feature information'
+              : 'Enable feature information'
+          }
+          infoEnabled={infoEnabled}
+          toggleInfo={() => setInfoEnabled(!infoEnabled)}
+        />
 
-            <BasemapContainer
-              aria-label="Choose a basemap"
-              basemapState={basemapState}
-              handleBasemapChange={handleBasemapChange}
-            />
-            {showTable && (
-              <AttributeTable
-                data={attributeTableData}
-                onClose={() => attributeTableHandlerRef.current.closeTable()}
-                onZoomToFeature={handleZoomToFeature}
-              />
-            )}
+        <BasemapContainer
+          aria-label="Choose a basemap"
+          basemapState={basemapState}
+          handleBasemapChange={handleBasemapChange}
+        />
+        {showTable && (
+          <AttributeTable
+            data={attributeTableData}
+            onClose={() => attributeTableHandlerRef.current.closeTable()}
+            onZoomToFeature={handleZoomToFeature}
+          />
+        )}
 
-            <AddWMSLayerModal
-              aria-labelledby="add-wms-layer-modal"
-              show={showAddWMSLayerModal}
-              onHide={() => setShowAddWMSLayerModal(false)}
-              onSubmit={handleAddWMSLayer}
-              wmsHandler={wmsHandlerRef.current}
-            />
+        <AddWMSLayerModal
+          aria-labelledby="add-wms-layer-modal"
+          show={showAddWMSLayerModal}
+          onHide={() => setShowAddWMSLayerModal(false)}
+          onSubmit={handleAddWMSLayer}
+          wmsHandler={wmsHandlerRef.current}
+        />
       </div>
     </div>
   );

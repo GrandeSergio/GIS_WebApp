@@ -15,11 +15,11 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
   const tableRef = useRef(null);
   const dropdownRef = useRef(null);
 
-/**
- * Handles mouse movement to adjust the table height dynamically.
- *
- * @param {MouseEvent} e - The mouse event triggered during movement.
- */
+  /**
+   * Handles mouse movement to adjust the table height dynamically.
+   *
+   * @param {MouseEvent} e - The mouse event triggered during movement.
+   */
   const handleMouseMove = (e) => {
     const newHeight = window.innerHeight - e.clientY;
     if (newHeight > 50 && newHeight < window.innerHeight - 100) {
@@ -27,19 +27,19 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
     }
   };
 
-/**
- * Handles the mouse up event by removing the mousemove and mouseup event listeners.
- */
+  /**
+   * Handles the mouse up event by removing the mousemove and mouseup event listeners.
+   */
   const handleMouseUp = () => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-/**
- * Handles clicks outside the dropdown to close the currently open dropdown.
- *
- * @param {MouseEvent} event - The mouse event triggered during the click.
- */
+  /**
+   * Handles clicks outside the dropdown to close the currently open dropdown.
+   *
+   * @param {MouseEvent} event - The mouse event triggered during the click.
+   */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -56,21 +56,21 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
     };
   }, [openDropdown]);
 
-   /**
- * Toggles the visibility of the dropdown menu for filtering a specific column.
- *
- * @param {string} column - The name of the column for which the dropdown is toggled.
- */
+  /**
+   * Toggles the visibility of the dropdown menu for filtering a specific column.
+   *
+   * @param {string} column - The name of the column for which the dropdown is toggled.
+   */
   const toggleDropdown = (column) => {
     setOpenDropdown((prev) => (prev === column ? null : column));
   };
 
-/**
- * Updates the filter input value for a specific column.
- *
- * @param {string} column - The name of the column to be filtered.
- * @param {string} value - The input value entered by the user.
- */
+  /**
+   * Updates the filter input value for a specific column.
+   *
+   * @param {string} column - The name of the column to be filtered.
+   * @param {string} value - The input value entered by the user.
+   */
   const handleFilterInputChange = (column, value) => {
     setFilterInputs((prev) => ({
       ...prev,
@@ -79,10 +79,10 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
   };
 
   /**
- * Applies a filter to the specified column using the current input value.
- *
- * @param {string} column - The name of the column to be filtered.
- */
+   * Applies a filter to the specified column using the current input value.
+   *
+   * @param {string} column - The name of the column to be filtered.
+   */
   const applyFilter = (column) => {
     setFilters((prev) => ({
       ...prev,
@@ -92,10 +92,10 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
   };
 
   /**
- * Clears the filter applied to the specified column.
- *
- * @param {string} column - The name of the column to clear the filter from.
- */
+   * Clears the filter applied to the specified column.
+   *
+   * @param {string} column - The name of the column to clear the filter from.
+   */
   const clearFilter = (column) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
@@ -110,10 +110,10 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
   };
 
   /**
- * Filters the table data based on the current filter values for each column.
- *
- * @type {Object[]} - The filtered data to be displayed in the table.
- */
+   * Filters the table data based on the current filter values for each column.
+   *
+   * @type {Object[]} - The filtered data to be displayed in the table.
+   */
   const filteredData = data.filter((row) => {
     return Object.keys(filters).every((column) => {
       const filterValue = filters[column];
@@ -129,11 +129,11 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
     return null;
   }
 
-    /**
- * Retrieves the headers (keys) from the first data row to be used as table column headers.
- *
- * @type {string[]} - An array of column headers.
- */
+  /**
+   * Retrieves the headers (keys) from the first data row to be used as table column headers.
+   *
+   * @type {string[]} - An array of column headers.
+   */
   const headers = Object.keys(data[0]);
 
   return (
