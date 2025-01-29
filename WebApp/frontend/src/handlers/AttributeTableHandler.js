@@ -20,22 +20,32 @@ class AttributeTableHandler {
    * @param {Function} targetLayer.layer.getSource - Retrieves the source of the layer.
    */
   showTable(targetLayer) {
-    if (targetLayer && targetLayer.isVector) {
-      const source = targetLayer.layer.getSource();
-      const features = source.getFeatures();
+  if (targetLayer && targetLayer.isVector) {
+    const source = targetLayer.layer.getSource();
+    const features = source.getFeatures();
 
-      const data = features.map((feature) => {
-        const properties = feature.getProperties();
-        delete properties.geometry;
-        return properties;
+    // Zamiana danych cech na odpowiednie formaty (bez 'geometry')
+    const data = features.map((feature) => {
+      const properties = feature.getProperties();
+      const sanitizedProperties = {};
+
+      Object.entries(properties).forEach(([key, value]) => {
+        if (key !== "geometry") { // Usuń 'geometry'
+          // Serializacja obiektów na string
+          sanitizedProperties[key] =
+            typeof value === "object" ? JSON.stringify(value) : value;
+        }
       });
 
-      this.setAttributeTableData(data);
-      this.setShowTable(true);
-    } else {
-      console.error('Target layer is invalid or not a vector layer.');
-    }
+      return sanitizedProperties;
+    });
+
+    this.setAttributeTableData(data);
+    this.setShowTable(true); // Otwórz tabelę w UI
+  } else {
+    console.error('Target layer is invalid or not a vector layer.');
   }
+}
 
   /**
    * Closes the attribute table by setting its visibility to false.

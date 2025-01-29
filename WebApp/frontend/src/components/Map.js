@@ -14,6 +14,14 @@ import AttributeTableHandler from '../handlers/AttributeTableHandler';
 import { initializeMap } from '../handlers/MapInitializer';
 import AddWMSLayerModal from './AddWMSLayerModal';
 import WMSHandler from '../handlers/WMSHandler';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from 'ol/layer/Vector';
+import Style from 'ol/style/Style';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
+import UploadVectorModal from './UploadVectorModal';
+import handleVectorUpload from '../handlers/UploadVector';
 
 const MapComponent = () => {
   const mapRef = useRef(null);
@@ -35,6 +43,7 @@ const MapComponent = () => {
 
   const [infoEnabled, setInfoEnabled] = useState(false);
   const labelHandlerRef = useRef(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   /**
    * Initializes the map on the component's first render.
@@ -172,10 +181,15 @@ const MapComponent = () => {
    * @param {Object} targetLayer - The layer whose attributes are displayed.
    */
   const handleShowAttributeTable = (targetLayer) => {
-    if (attributeTableHandlerRef.current) {
-      attributeTableHandlerRef.current.showTable(targetLayer);
-    }
-  };
+  if (attributeTableHandlerRef.current) {
+    // Pobierz atrybuty wszystkich cech warstwy
+    const features = targetLayer.layer.getSource().getFeatures();
+    const attributeData = features.map((feature) => feature.getProperties());
+
+    setAttributeTableData(attributeData); // Aktualizuj dane tabeli
+    setShowTable(true); // Pokaż tabelę
+  }
+};
 
   /**
    * Adds a new WMS (Web Map Service) layer to the map.
@@ -225,6 +239,10 @@ const MapComponent = () => {
     e.preventDefault();
   };
 
+const openUploadModal = () => {
+  setShowUploadModal(true); // Ustawia widoczność modału na true
+};
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <Navigation
@@ -240,6 +258,7 @@ const MapComponent = () => {
         }}
         showAttributeTable={handleShowAttributeTable}
         openAddWMSLayerModal={() => setShowAddWMSLayerModal(true)}
+        openUploadModal={openUploadModal}
         aria-label="Layer navigation"
       />
       <div style={{ flex: 1, position: 'relative' }}>
@@ -280,6 +299,11 @@ const MapComponent = () => {
           onHide={() => setShowAddWMSLayerModal(false)}
           onSubmit={handleAddWMSLayer}
           wmsHandler={wmsHandlerRef.current}
+        />
+        <UploadVectorModal
+          show={showUploadModal}
+          onHide={() => setShowUploadModal(false)}
+          onUpload={(geoJsonData, fileName) => handleVectorUpload(geoJsonData, fileName, map, setLayers)}
         />
       </div>
     </div>

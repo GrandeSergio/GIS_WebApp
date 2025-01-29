@@ -57,37 +57,58 @@ class LayerZoom {
    * @param {Object} featureProperties - An object containing key-value pairs to identify the target feature.
    */
   zoomToFeature(featureProperties) {
-    // Validate that layersState exists and is not empty before attempting to zoom.
-    if (!this.layersState || this.layersState.length === 0) {
-      console.error('Cannot zoom: layersState is empty or invalid.');
-      return;
-    }
+  // Sprawdź poprawność stanu warstw
+  if (!this.layersState || this.layersState.length === 0) {
+    console.error('Cannot zoom: layersState is empty or invalid.');
+    return;
+  }
 
-    // Retrieve the features from the first layer's source (modify as needed for other specific layers).
-    const targetFeatures = this.layersState[0].layer.getSource().getFeatures();
+  let targetFeature = null; // Przechowuje znalezioną cechę
 
-    // Locate the target feature by matching its properties with the specified featureProperties object.
-    const targetFeature = targetFeatures.find((feature) => {
-      return Object.keys(featureProperties).every(
-        (key) => feature.get(key) === featureProperties[key]
+  // Iteruj przez wszystkie wektorowe warstwy
+  for (const { layer } of this.layersState) {
+    if (layer instanceof VectorLayer) {
+      const source = layer.getSource(); // Pobierz źródło warstwy
+      const features = source.getFeatures(); // Pobierz wszystkie cechy
+
+      // Próbuj znaleźć cechę po ID, jeśli taka właściwość istnieje
+      targetFeature = features.find(
+        (feature) => feature.getId() === featureProperties.id
       );
-    });
 
-    // If the target feature and map object are valid, execute the zoom operation.
-    if (targetFeature && this.map) {
-      const geometry = targetFeature.getGeometry();
-      // Ensure that the feature's geometry exists before calculating its extent.
-      if (geometry) {
-        // Obtain the extent (bounding box) of the feature's geometry.
-        const extent = geometry.getExtent();
-        this.map.getView().fit(extent, {
-          size: this.map.getSize(),
-          maxZoom: 18,
-          padding: [20, 20, 20, 20],
-        });
+      // Jeśli nie znaleziono po ID, szukaj cechy po właściwościach
+      if (!targetFeature) {
+        targetFeature = features.find((feature) =>
+          Object.keys(featureProperties).every(
+            (key) => feature.get(key) === featureProperties[key]
+          )
+        );
       }
+
+      // Jeśli znaleziono cechę, przerywamy pętlę
+      if (targetFeature) break;
     }
   }
+
+  // Jeśli nie znaleziono cechy
+  if (!targetFeature) {
+    console.error('Feature not found in the available vector layers.');
+    return;
+  }
+
+  // Powiększ do znalezionej cechy
+  const geometry = targetFeature.getGeometry();
+  if (geometry) {
+    const extent = geometry.getExtent();
+    this.map.getView().fit(extent, {
+      size: this.map.getSize(),
+      maxZoom: 18,
+      padding: [20, 20, 20, 20],
+    });
+  } else {
+    console.error('Target feature does not have a valid geometry.');
+  }
+}
 }
 
 export default LayerZoom;

@@ -3,6 +3,7 @@ import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Text from 'ol/style/Text';
+import {getBaseColor } from '../styles/VectorStyles';
 
 /**
  * Class to handle toggling visibility and actions related to map layers
@@ -152,7 +153,7 @@ class LabelHandler {
     const source = layer.layer.getSource();
 
     // Pobierz aktywny kolor warstwy
-    const activeColor = this.activeLayerColor[layerId] || { r: 120, g: 120, b: 240, a: 0.6 };
+    const activeColor = this.activeLayerColor[layerId] || getBaseColor();
 
     // Zapisz nazwę kolumny etykiet w obiekcie warstwy
     layer.labelColumn = columnName;

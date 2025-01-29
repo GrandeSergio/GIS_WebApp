@@ -134,7 +134,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
    *
    * @type {string[]} - An array of column headers.
    */
-  const headers = Object.keys(data[0]);
+  const headers = Object.keys(data[0]).filter((header) => header !== 'geometry');
 
   return (
     <div
@@ -355,7 +355,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                 }}
               >
                 <button
-                  onClick={() => onZoomToFeature(row)}
+                  onClick={() => onZoomToFeature({ id: row.id, ...row })}
                   aria-label="Zoom to feature"
                   title="Zoom to feature"
                   style={{
@@ -371,12 +371,15 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                 </button>
               </td>
               {headers.map((header) => (
-                <td
-                  key={header}
-                  style={{ border: '1px solid #ccc', padding: '5px' }}
-                >
-                  {row[header]}
-                </td>
+                  <td
+                    key={header}
+                    style={{ border: "1px solid #ccc", padding: "5px" }}
+                  >
+                    {/* Bezpieczne renderowanie każdej komórki */}
+                    {row[header] !== null && row[header] !== undefined
+                      ? row[header].toString()
+                      : ""}
+                  </td>
               ))}
             </tr>
           ))}
