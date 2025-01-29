@@ -57,58 +57,51 @@ class LayerZoom {
    * @param {Object} featureProperties - An object containing key-value pairs to identify the target feature.
    */
   zoomToFeature(featureProperties) {
-  // Sprawdź poprawność stanu warstw
-  if (!this.layersState || this.layersState.length === 0) {
-    console.error('Cannot zoom: layersState is empty or invalid.');
-    return;
-  }
+    if (!this.layersState || this.layersState.length === 0) {
+      console.error('Cannot zoom: layersState is empty or invalid.');
+      return;
+    }
 
-  let targetFeature = null; // Przechowuje znalezioną cechę
+    let targetFeature = null;
 
-  // Iteruj przez wszystkie wektorowe warstwy
-  for (const { layer } of this.layersState) {
-    if (layer instanceof VectorLayer) {
-      const source = layer.getSource(); // Pobierz źródło warstwy
-      const features = source.getFeatures(); // Pobierz wszystkie cechy
+    for (const { layer } of this.layersState) {
+      if (layer instanceof VectorLayer) {
+        const source = layer.getSource();
+        const features = source.getFeatures();
 
-      // Próbuj znaleźć cechę po ID, jeśli taka właściwość istnieje
-      targetFeature = features.find(
-        (feature) => feature.getId() === featureProperties.id
-      );
-
-      // Jeśli nie znaleziono po ID, szukaj cechy po właściwościach
-      if (!targetFeature) {
-        targetFeature = features.find((feature) =>
-          Object.keys(featureProperties).every(
-            (key) => feature.get(key) === featureProperties[key]
-          )
+        targetFeature = features.find(
+          (feature) => feature.getId() === featureProperties.id
         );
-      }
 
-      // Jeśli znaleziono cechę, przerywamy pętlę
-      if (targetFeature) break;
+        if (!targetFeature) {
+          targetFeature = features.find((feature) =>
+            Object.keys(featureProperties).every(
+              (key) => feature.get(key) === featureProperties[key]
+            )
+          );
+        }
+
+        if (targetFeature) break;
+      }
+    }
+
+    if (!targetFeature) {
+      console.error('Feature not found in the available vector layers.');
+      return;
+    }
+
+    const geometry = targetFeature.getGeometry();
+    if (geometry) {
+      const extent = geometry.getExtent();
+      this.map.getView().fit(extent, {
+        size: this.map.getSize(),
+        maxZoom: 18,
+        padding: [20, 20, 20, 20],
+      });
+    } else {
+      console.error('Target feature does not have a valid geometry.');
     }
   }
-
-  // Jeśli nie znaleziono cechy
-  if (!targetFeature) {
-    console.error('Feature not found in the available vector layers.');
-    return;
-  }
-
-  // Powiększ do znalezionej cechy
-  const geometry = targetFeature.getGeometry();
-  if (geometry) {
-    const extent = geometry.getExtent();
-    this.map.getView().fit(extent, {
-      size: this.map.getSize(),
-      maxZoom: 18,
-      padding: [20, 20, 20, 20],
-    });
-  } else {
-    console.error('Target feature does not have a valid geometry.');
-  }
-}
 }
 
 export default LayerZoom;

@@ -5,18 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a99ae727-7872-4f96-8191-109187d03df8" name="Changes" comment="Add dynamic styling and labeling for vector layers&#10;&#10;Introduced dynamic label placement and color customization for vector layers, leveraging `StyleHandler` and `LabelHandler`. Enhanced user interactivity by adding color pickers, label column selection, and refreshed layer rendering upon map events.">
-      <change afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/UploadVectorModal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/UploadVector.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebApp/frontend/src/styles/VectorStyles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/AttributeTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/AttributeTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/Map.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/Navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/Navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/UploadVectorModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/UploadVectorModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/AttributeTableHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/AttributeTableHandler.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/LayerHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/LayerHandler.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/MapInteractions.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/MapInteractions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/UploadVector.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/UploadVector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/styles/VectorStyles.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/styles/VectorStyles.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,16 +47,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Layer__upload&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/PycharmProjects/GISWebApp&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.codeium.enabled": "true",
+    "git-widget-placeholder": "rename__layer",
+    "last_opened_file_path": "C:/PycharmProjects/GISWebApp",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\PycharmProjects\GISWebApp\WebApp\frontend\src\styles" />

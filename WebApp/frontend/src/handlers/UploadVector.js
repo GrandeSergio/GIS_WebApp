@@ -16,10 +16,9 @@ import { baseVectorStyle } from '../styles/VectorStyles';
 const handleVectorUpload = (geoJsonData, fileName, map, setLayers) => {
   const layerName = fileName.replace(/\.[^/.]+$/, '');
   const features = new GeoJSON().readFeatures(geoJsonData, {
-    featureProjection: 'EPSG:3857', // Projekcja na układ mapy
+    featureProjection: 'EPSG:3857',
   });
 
-  // Dodaj unikalny identyfikator dla każdej cechy, jeśli nie została ustawiona
   features.forEach((feature, index) => {
     const properties = feature.getProperties();
     if (!properties.id) {
@@ -33,13 +32,11 @@ const handleVectorUpload = (geoJsonData, fileName, map, setLayers) => {
 
   const vectorLayer = new VectorLayer({
     source: vectorSource,
-    style: baseVectorStyle(), // Użycie stylu bazowego
+    style: baseVectorStyle(),
   });
 
-  // Dodanie warstwy wektorowej do mapy
   map.addLayer(vectorLayer);
 
-  // Wyciąganie atrybutów z pierwszej cechy (pomijając "geometry")
   const attributes =
     features.length > 0
       ? Object.keys(features[0].getProperties()).filter(
@@ -47,12 +44,11 @@ const handleVectorUpload = (geoJsonData, fileName, map, setLayers) => {
         )
       : [];
 
-  // Aktualizacja stanu warstw
   setLayers((prevLayers) => [
     ...prevLayers,
     {
       id: `vector-${Date.now()}`,
-      name: layerName, // Użyj nazwy pliku przesłanego przez użytkownika
+      name: layerName,
       layer: vectorLayer,
       isVector: true,
       hasAttributes: attributes.length > 0,

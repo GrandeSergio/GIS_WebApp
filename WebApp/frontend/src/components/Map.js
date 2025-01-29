@@ -7,7 +7,11 @@ import { layers } from '../constants/layers';
 import FeatureInfo from './FeatureInfo';
 import AttributeTable from './AttributeTable';
 import { EnableInformationButton, BasemapContainer } from './MapElements';
-import { ToggleLayerVisibility, reorderLayers, LabelHandler } from '../handlers/LayerHandler';
+import {
+  ToggleLayerVisibility,
+  reorderLayers,
+  LabelHandler,
+} from '../handlers/LayerHandler';
 import LayerZoom from '../handlers/MapInteractions';
 import BasemapHandler from '../handlers/BasemapHandler';
 import AttributeTableHandler from '../handlers/AttributeTableHandler';
@@ -59,16 +63,16 @@ const MapComponent = () => {
     setMap(initialMap);
 
     initialMap.on('moveend', () => {
-        layersState.forEach((layer) => {
-            if (
-                layer.layer &&
-                layer.layer.getVisible() &&
-                layer.isVector &&
-                labelHandlerRef.current
-            ) {
-                labelHandlerRef.current.refreshLabels(layer.id);
-            }
-        });
+      layersState.forEach((layer) => {
+        if (
+          layer.layer &&
+          layer.layer.getVisible() &&
+          layer.isVector &&
+          labelHandlerRef.current
+        ) {
+          labelHandlerRef.current.refreshLabels(layer.id);
+        }
+      });
     });
 
     return () => {
@@ -120,18 +124,17 @@ const MapComponent = () => {
       );
       labelHandlerRef.current = new LabelHandler(layersState);
       map.on('moveend', () => {
-
-          layersState.forEach((layer) => {
-            if (
-              layer.layer &&
-              layer.layer.getVisible() &&
-              layer.isVector &&
-              labelHandlerRef.current
-            ) {
-              console.log(`Refreshing labels on moveend for layer: ${layer.id}`);
-              labelHandlerRef.current.refreshLabels(layer.id);
-            }
-          });
+        layersState.forEach((layer) => {
+          if (
+            layer.layer &&
+            layer.layer.getVisible() &&
+            layer.isVector &&
+            labelHandlerRef.current
+          ) {
+            console.log(`Refreshing labels on moveend for layer: ${layer.id}`);
+            labelHandlerRef.current.refreshLabels(layer.id);
+          }
+        });
       });
     }
   }, [map, layersState, basemapState]);
@@ -181,15 +184,14 @@ const MapComponent = () => {
    * @param {Object} targetLayer - The layer whose attributes are displayed.
    */
   const handleShowAttributeTable = (targetLayer) => {
-  if (attributeTableHandlerRef.current) {
-    // Pobierz atrybuty wszystkich cech warstwy
-    const features = targetLayer.layer.getSource().getFeatures();
-    const attributeData = features.map((feature) => feature.getProperties());
+    if (attributeTableHandlerRef.current) {
+      const features = targetLayer.layer.getSource().getFeatures();
+      const attributeData = features.map((feature) => feature.getProperties());
 
-    setAttributeTableData(attributeData); // Aktualizuj dane tabeli
-    setShowTable(true); // Pokaż tabelę
-  }
-};
+      setAttributeTableData(attributeData);
+      setShowTable(true);
+    }
+  };
 
   /**
    * Adds a new WMS (Web Map Service) layer to the map.
@@ -239,9 +241,9 @@ const MapComponent = () => {
     e.preventDefault();
   };
 
-const openUploadModal = () => {
-  setShowUploadModal(true); // Ustawia widoczność modału na true
-};
+  const openUploadModal = () => {
+    setShowUploadModal(true);
+  };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -303,7 +305,9 @@ const openUploadModal = () => {
         <UploadVectorModal
           show={showUploadModal}
           onHide={() => setShowUploadModal(false)}
-          onUpload={(geoJsonData, fileName) => handleVectorUpload(geoJsonData, fileName, map, setLayers)}
+          onUpload={(geoJsonData, fileName) =>
+            handleVectorUpload(geoJsonData, fileName, map, setLayers)
+          }
         />
       </div>
     </div>

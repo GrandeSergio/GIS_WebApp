@@ -134,7 +134,9 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
    *
    * @type {string[]} - An array of column headers.
    */
-  const headers = Object.keys(data[0]).filter((header) => header !== 'geometry');
+  const headers = Object.keys(data[0]).filter(
+    (header) => header !== 'geometry'
+  );
 
   return (
     <div
@@ -152,7 +154,6 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
         resize: 'none',
       }}
     >
-      {/* Uchyt do przeciągania */}
       <div
         style={{
           position: 'absolute',
@@ -173,7 +174,6 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
         }}
       ></div>
 
-      {/* Przyciski */}
       <div
         style={{
           position: 'sticky',
@@ -200,7 +200,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
         </button>
       </div>
 
-      {/* Tabela */}
+      {/* Table */}
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
@@ -229,7 +229,6 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                 }}
               >
                 {header}
-                {/* Przyciski filtrów */}
                 <button
                   style={{
                     width: '0',
@@ -249,7 +248,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                   onClick={() => toggleDropdown(header)}
                 ></button>
 
-                {/* Dropdown filtrów */}
+                {/* filter Dropdown */}
                 {openDropdown === header && (
                   <div
                     ref={dropdownRef}
@@ -264,7 +263,6 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                       boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
                     }}
                   >
-                    {/* Wiersz dla przycisku X do zamykania */}
                     <div
                       style={{
                         display: 'flex',
@@ -287,7 +285,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                       ></button>
                     </div>
 
-                    {/* Input do wyszukiwania */}
+                    {/* Input */}
                     <input
                       type="text"
                       placeholder="Type to filter"
@@ -304,7 +302,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                       }}
                     />
 
-                    {/* Przycisk Search i Clear */}
+                    {/* Search and Clear */}
                     <div
                       style={{
                         display: 'flex',
@@ -371,15 +369,14 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                 </button>
               </td>
               {headers.map((header) => (
-                  <td
-                    key={header}
-                    style={{ border: "1px solid #ccc", padding: "5px" }}
-                  >
-                    {/* Bezpieczne renderowanie każdej komórki */}
-                    {row[header] !== null && row[header] !== undefined
-                      ? row[header].toString()
-                      : ""}
-                  </td>
+                <td
+                  key={header}
+                  style={{ border: '1px solid #ccc', padding: '5px' }}
+                >
+                  {row[header] !== null && row[header] !== undefined
+                    ? row[header].toString()
+                    : ''}
+                </td>
               ))}
             </tr>
           ))}

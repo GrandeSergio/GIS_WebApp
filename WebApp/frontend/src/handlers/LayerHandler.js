@@ -3,7 +3,7 @@ import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Text from 'ol/style/Text';
-import {getBaseColor } from '../styles/VectorStyles';
+import { getBaseColor } from '../styles/VectorStyles';
 
 /**
  * Class to handle toggling visibility and actions related to map layers
@@ -50,10 +50,6 @@ class ToggleLayerVisibility {
                 // Instance for handling GeoJSON feature fetch operations
                 const fetchHandler = new FetchGeoJSON(layer.apiUrl);
                 fetchHandler.fetchAndAddFeatures(layer.layer).then(() => {
-                  console.log(
-                    `Dane dla warstwy "${layer.name}" zostały wczytane.`
-                  );
-
                   this.setLayers((prev) =>
                     prev.map((l) =>
                       l.id === layerId
@@ -73,7 +69,7 @@ class ToggleLayerVisibility {
             }
           }
 
-          return { ...layer, active: isActive }; // Ustawiamy aktywność
+          return { ...layer, active: isActive };
         }
         return layer;
       })
@@ -110,25 +106,23 @@ class StyleHandler {
    * @param {Object} color - Color object from the color picker (RGBA format)
    */
   handleColorChange(layerId, color) {
-  this.setActiveLayerColor((prev) => ({
-    ...prev,
-    [layerId]: color.rgb, // Zapisz nowy kolor aktywnej warstwy
-  }));
+    this.setActiveLayerColor((prev) => ({
+      ...prev,
+      [layerId]: color.rgb,
+    }));
 
-  const layer = this.layers.find((l) => l.id === layerId);
+    const layer = this.layers.find((l) => l.id === layerId);
 
-  if (layer && layer.layer) {
-    const { r, g, b, a } = color.rgb;
+    if (layer && layer.layer) {
+      const { r, g, b, a } = color.rgb;
 
-    // Pobierz aktualną kolumnę etykiet (jeśli istnieje)
-    const columnName = layer.labelColumn || null;
+      const columnName = layer.labelColumn || null;
 
-    // Ustaw nowy styl warstwy z uwzględnieniem etykiet
-    layer.layer.setStyle((feature) =>
-      generateLayerStyle(feature, { r, g, b, a }, columnName)
-    );
+      layer.layer.setStyle((feature) =>
+        generateLayerStyle(feature, { r, g, b, a }, columnName)
+      );
+    }
   }
-}
 }
 
 /**
@@ -147,36 +141,31 @@ class LabelHandler {
    * @param {string} columnName - Name of the column to use for the labels
    */
   addLabelsToLayer(layerId, columnName) {
-  const layer = this.layers.find((l) => l.id === layerId);
+    const layer = this.layers.find((l) => l.id === layerId);
 
-  if (layer && layer.layer) {
-    const source = layer.layer.getSource();
+    if (layer && layer.layer) {
+      const source = layer.layer.getSource();
 
-    // Pobierz aktywny kolor warstwy
-    const activeColor = this.activeLayerColor[layerId] || getBaseColor();
+      const activeColor = this.activeLayerColor[layerId] || getBaseColor();
 
-    // Zapisz nazwę kolumny etykiet w obiekcie warstwy
-    layer.labelColumn = columnName;
+      layer.labelColumn = columnName;
 
-    // Ustaw nowy styl warstwy
-    layer.layer.setStyle((feature) =>
-      generateLayerStyle(feature, activeColor, columnName)
-    );
+      layer.layer.setStyle((feature) =>
+        generateLayerStyle(feature, activeColor, columnName)
+      );
 
-    // Odśwież źródło danych, aby wymusić renderowanie
-    source.changed();
+      source.changed();
+    }
   }
-}
 
-refreshLabels(layerId) {
-  const layer = this.layers.find((l) => l.id === layerId);
+  refreshLabels(layerId) {
+    const layer = this.layers.find((l) => l.id === layerId);
 
-  if (layer && layer.layer && layer.layer.getSource()) {
-  console.log(`Refreshing labels for layer: ${layerId}`);
-    layer.layer.getSource().changed(); // Odśwież dynamicznie źródło danych warstwy
+    if (layer && layer.layer && layer.layer.getSource()) {
+      console.log(`Refreshing labels for layer: ${layerId}`);
+      layer.layer.getSource().changed();
+    }
   }
-}
-
 }
 
 /**
@@ -203,36 +192,47 @@ const reorderLayers = (layers, sourceIndex, destinationIndex) => {
   return updatedLayers;
 };
 
-// Funkcja generująca styl warstwy, uwzględniająca kolor i etykiety
+/**
+ * Generates a layer style for rendering features on the map, including fill color, stroke, and optional labels.
+ *
+ * @param {Object} feature - The feature object from the vector layer to be styled. This object provides access to attributes for dynamic labels.
+ * @param {Object} activeColor - The RGBA color configuration for the feature's fill and stroke.
+ * @param {number} activeColor.r - Red channel of the color (0-255).
+ * @param {number} activeColor.g - Green channel of the color (0-255).
+ * @param {number} activeColor.b - Blue channel of the color (0-255).
+ * @param {number} activeColor.a - Alpha channel (transparency) of the color (0.0-1.0).
+ * @param {string|null} [columnName=null] - The name of the column to be used for rendering text labels. If `null`, no labels are rendered for the feature.
+ *
+ * @returns {Object} - A new OpenLayers `Style` object configured with the specified color and label settings.
+ */
 const generateLayerStyle = (feature, activeColor, columnName = null) => {
   const { r, g, b, a } = activeColor || { r: 120, g: 120, b: 240, a: 0.6 };
 
-  // Tworzenie podstawowego stylu geometrii
   const geometryStyle = new Style({
     fill: new Fill({
-      color: `rgba(${r}, ${g}, ${b}, ${a})`, // Kolor wypełnienia
+      color: `rgba(${r}, ${g}, ${b}, ${a})`,
     }),
     stroke: new Stroke({
-      color: `rgba(${r}, ${g}, ${b}, ${a})`, // Kolor obrysu
+      color: `rgba(${r}, ${g}, ${b}, ${a})`,
       width: 2,
     }),
     text: columnName
       ? new Text({
           font: '12px Arial',
-          text: feature.get(columnName) || '', // Pobranie dynamicznej etykiety
+          text: feature.get(columnName) || '',
           overflow: true,
           fill: new Fill({
-            color: `rgba(${r}, ${g}, ${b}, 1)`, // Kolor tekstu
+            color: `rgba(${r}, ${g}, ${b}, 1)`,
           }),
           stroke: new Stroke({
-            color: 'rgba(255, 255, 255, 1)', // Obrys tekstu
+            color: 'rgba(255, 255, 255, 1)',
             width: 3,
           }),
           placement: 'point',
           textAlign: 'center',
-          offsetY: -10, // Umieszczanie etykiety
+          offsetY: -10,
         })
-      : null, // Brak etykiety, jeśli kolumna nie jest ustawiona
+      : null,
   });
 
   return geometryStyle;

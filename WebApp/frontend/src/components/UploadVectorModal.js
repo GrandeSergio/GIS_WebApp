@@ -10,27 +10,32 @@ import { useDropzone } from 'react-dropzone';
  * @param {Function} props.onUpload - Function to handle GeoJSON data upload.
  */
 const UploadVectorModal = ({ show, onHide, onUpload }) => {
-  const onDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0]; // Pobranie pliku
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const geoJsonData = JSON.parse(e.target.result); // Parsowanie pliku GeoJSON
-          onUpload(geoJsonData, file.name); // Przekazujemy dane GeoJSON wraz z nazwą pliku
-          onHide(); // Zamykamy modal
-        } catch (error) {
-          console.error('Invalid GeoJSON file:', error);
-          alert('Invalid GeoJSON format. Please ensure the file is properly formatted.');
-        }
-      };
-      reader.readAsText(file); // Odczyt pliku jako tekst
-    }
-  }, [onUpload, onHide]);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const geoJsonData = JSON.parse(e.target.result);
+            onUpload(geoJsonData, file.name);
+            onHide();
+          } catch (error) {
+            console.error('Invalid GeoJSON file:', error);
+            alert(
+              'Invalid GeoJSON format. Please ensure the file is properly formatted.'
+            );
+          }
+        };
+        reader.readAsText(file);
+      }
+    },
+    [onUpload, onHide]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: '.geojson,application/geo+json', // Akceptujemy pliki GeoJSON
+    accept: '.geojson,application/geo+json',
   });
 
   return (
@@ -53,9 +58,7 @@ const UploadVectorModal = ({ show, onHide, onUpload }) => {
           {isDragActive ? (
             <p>Drop the GeoJSON file here...</p>
           ) : (
-            <p>
-              Drag and drop a GeoJSON file here, or click to select one.
-            </p>
+            <p>Drag and drop a GeoJSON file here, or click to select one.</p>
           )}
         </div>
       </Modal.Body>
