@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a99ae727-7872-4f96-8191-109187d03df8" name="Changes" comment="Add dynamic styling and labeling for vector layers&#10;&#10;Introduced dynamic label placement and color customization for vector layers, leveraging `StyleHandler` and `LabelHandler`. Enhanced user interactivity by adding color pickers, label column selection, and refreshed layer rendering upon map events.">
+    <list default="true" id="a99ae727-7872-4f96-8191-109187d03df8" name="Changes" comment="`Refactor map components and improve layer interactions`&#10;&#10;Added Rename Layer functionality&#10;&#10;Refactored multiple map components and handlers to enhance code readability and consistency. Improved the handling of layer properties, styling, labeling, and attribute table interaction. Added functionalities like editing layer names, dynamic label updates, and better color picker integration with UI optimizations.">
+      <change afterPath="$PROJECT_DIR$/WebApp/web_app/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/AttributeTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/AttributeTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/Map.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/Navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/Navigation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/components/UploadVectorModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/components/UploadVectorModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/AttributeTableHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/AttributeTableHandler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/LayerHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/LayerHandler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/MapInteractions.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/MapInteractions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/handlers/UploadVector.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/handlers/UploadVector.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApp/frontend/src/styles/VectorStyles.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/frontend/src/styles/VectorStyles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApp/web_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/WebApp/web_app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,15 +17,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="rename_layer" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -47,16 +40,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.codeium.enabled": "true",
-    "git-widget-placeholder": "rename__layer",
-    "last_opened_file_path": "C:/PycharmProjects/GISWebApp",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/PycharmProjects/GISWebApp&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\PycharmProjects\GISWebApp\WebApp\frontend\src\styles" />
@@ -95,7 +88,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738147489086</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="`Refactor map components and improve layer interactions`&#10;&#10;Added Rename Layer functionality&#10;&#10;Refactored multiple map components and handlers to enhance code readability and consistency. Improved the handling of layer properties, styling, labeling, and attribute table interaction. Added functionalities like editing layer names, dynamic label updates, and better color picker integration with UI optimizations.">
+      <option name="closed" value="true" />
+      <created>1738186161952</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1738186161952</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,6 +125,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add initial GIS WebApp with frontend, backend, and map setup&#10;&#10;Introduce a React-based frontend with Bootstrap integration, including components for WMS layer management, an interactive attribute table, and basemap handling. Backend setup includes a Django framework configured with basic files to support the application. A base template integrates OpenLayers for map visualization." />
     <MESSAGE value="Add dynamic styling and labeling for vector layers&#10;&#10;Introduced dynamic label placement and color customization for vector layers, leveraging `StyleHandler` and `LabelHandler`. Enhanced user interactivity by adding color pickers, label column selection, and refreshed layer rendering upon map events." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add dynamic styling and labeling for vector layers&#10;&#10;Introduced dynamic label placement and color customization for vector layers, leveraging `StyleHandler` and `LabelHandler`. Enhanced user interactivity by adding color pickers, label column selection, and refreshed layer rendering upon map events." />
+    <MESSAGE value="commit" />
+    <MESSAGE value="&quot;Refactor map components and handlers for clarity and usability&#10;&#10;Refactor code across Map, Navigation, and LayerHandler components to improve readability, maintainability, and functionality. Changes include indentation fixes, removal of redundant comments, and restructuring of state management for labels, styles, and attribute tables. Enhanced feature handling with label refreshing, editable layer names, and streamlined styling logic.&quot;" />
+    <MESSAGE value="`Refactor map components and improve layer interactions`&#10;&#10;Added Rename Layer functionality&#10;&#10;Refactored multiple map components and handlers to enhance code readability and consistency. Improved the handling of layer properties, styling, labeling, and attribute table interaction. Added functionalities like editing layer names, dynamic label updates, and better color picker integration with UI optimizations." />
+    <option name="LAST_COMMIT_MESSAGE" value="`Refactor map components and improve layer interactions`&#10;&#10;Added Rename Layer functionality&#10;&#10;Refactored multiple map components and handlers to enhance code readability and consistency. Improved the handling of layer properties, styling, labeling, and attribute table interaction. Added functionalities like editing layer names, dynamic label updates, and better color picker integration with UI optimizations." />
   </component>
 </project>
