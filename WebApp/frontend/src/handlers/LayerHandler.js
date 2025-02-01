@@ -162,7 +162,6 @@ class LabelHandler {
     const layer = this.layers.find((l) => l.id === layerId);
 
     if (layer && layer.layer && layer.layer.getSource()) {
-      console.log(`Refreshing labels for layer: ${layerId}`);
       layer.layer.getSource().changed();
     }
   }

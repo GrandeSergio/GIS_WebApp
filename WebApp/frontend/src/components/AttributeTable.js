@@ -14,6 +14,8 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const tableRef = useRef(null);
   const dropdownRef = useRef(null);
+  const resizerRef = useRef(null);
+  const [tableWidth, setTableWidth] = useState(0);
 
   /**
    * Handles mouse movement to adjust the table height dynamically.
@@ -125,6 +127,23 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
     });
   });
 
+  useEffect(() => {
+    const updateWidth = () => {
+      if (tableRef.current) {
+        setTableWidth(tableRef.current.scrollWidth); // Pobierz rzeczywistą szerokość tabeli
+      }
+    };
+
+    updateWidth(); // Ustaw podczas inicjalizacji komponentu
+
+    // Nasłuchiwanie zmiany rozmiaru okna (np. w przypadku resize w przeglądarce)
+    window.addEventListener('resize', updateWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateWidth); // Usuń nasłuchiwacz, aby unikać wycieków pamięci
+    };
+  }, [data]);
+
   if (!data || data.length === 0) {
     return null;
   }
@@ -155,11 +174,12 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
       }}
     >
       <div
+        ref={resizerRef} // Referencja do resizera
         style={{
           position: 'absolute',
           top: '-5px',
           left: 0,
-          width: '100%',
+          width: `${tableWidth}px`, // Dynamiczna szerokość oparta na szerokości tabeli
           height: '12px',
           backgroundColor: '#dddddd',
           opacity: 0.7,
@@ -181,23 +201,22 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
           zIndex: 2,
           backgroundColor: 'white',
           borderBottom: '1px solid #ccc',
-          padding: '10px',
+          padding: '5px',
         }}
       >
         <button
           onClick={onClose}
-          aria-label="Close the table"
-          title="Close the table"
+          className="btn-close"
+          aria-label="Close"
           style={{
-            marginRight: '10px',
-            padding: '5px',
-            backgroundColor: '#007bff',
-            color: 'white',
+            position: 'sticky',
+            right: '0',
+            margin: '5px',
+            backgroundColor: 'transparent',
             border: 'none',
+            zIndex: 3,
           }}
-        >
-          Close
-        </button>
+        ></button>
       </div>
 
       {/* Table */}
@@ -206,12 +225,12 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
           <tr>
             <th
               style={{
+                position: 'sticky',
                 border: '1px solid #ccc',
                 padding: '5px',
                 backgroundColor: '#f8f8f8',
-                position: 'sticky',
-                top: '40px',
-                zIndex: 1,
+                top: '42px',
+                zIndex: 2,
               }}
             >
               Actions
@@ -220,12 +239,13 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
               <th
                 key={header}
                 style={{
+                  position: 'sticky',
                   border: '1px solid #ccc',
                   padding: '5px',
                   backgroundColor: '#f8f8f8',
-                  position: 'sticky',
-                  top: '40px',
-                  zIndex: 1,
+                  top: '42px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  zIndex: 2,
                 }}
               >
                 {header}
@@ -233,6 +253,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                   style={{
                     width: '0',
                     height: '0',
+                    left: '0',
                     borderLeft: '6px solid transparent',
                     borderRight: '6px solid transparent',
                     borderTop: '8px solid #000000',
@@ -244,6 +265,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                     transform:
                       openDropdown === header ? 'rotate(180deg)' : 'none',
                     transition: 'transform 0.2s ease',
+                    zIndex: 2,
                   }}
                   onClick={() => toggleDropdown(header)}
                 ></button>
@@ -258,7 +280,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                       border: '1px solid #ccc',
                       borderRadius: '4px',
                       padding: '10px',
-                      zIndex: 10,
+                      zIndex: 10000,
                       width: '200px',
                       boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
                     }}
@@ -268,6 +290,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                         display: 'flex',
                         justifyContent: 'flex-end',
                         marginBottom: '3px',
+                        zIndex: 10,
                       }}
                     >
                       <button
@@ -280,6 +303,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                           border: 'none',
                           color: '#333',
                           fontSize: '10px',
+                          zIndex: 4,
                           cursor: 'pointer',
                         }}
                       ></button>
@@ -298,6 +322,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                         padding: '8px',
                         border: '1px solid #ccc',
                         borderRadius: '4px',
+                        zIndex: 4,
                         marginBottom: '10px',
                       }}
                     />
@@ -317,6 +342,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                           color: 'white',
                           border: 'none',
                           borderRadius: '4px',
+                          zIndex: 4,
                           cursor: 'pointer',
                         }}
                       >
@@ -365,7 +391,7 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
                     cursor: 'pointer',
                   }}
                 >
-                  Zoom
+                  <i className="bi bi-search" style={{ fontSize: '16px' }}></i>
                 </button>
               </td>
               {headers.map((header) => (

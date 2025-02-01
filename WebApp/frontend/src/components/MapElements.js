@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from '../styles/MapElements.module.css';
 
 /**
@@ -22,7 +22,7 @@ export const EnableInformationButton = ({ infoEnabled, toggleInfo }) => (
       borderRadius: '4px',
       cursor: 'pointer',
     }}
-    title={infoEnabled ? 'Disable Information' : 'Enable Information'}
+    data-tooltip={infoEnabled ? 'Disable Information' : 'Enable Information'}
   >
     <i className="bi bi-info-circle"></i>
   </button>
@@ -36,12 +36,31 @@ export const EnableInformationButton = ({ infoEnabled, toggleInfo }) => (
  */
 export const BasemapContainer = ({ basemapState, handleBasemapChange }) => {
   const [showBasemaps, setShowBasemaps] = useState(false);
+  const panelRef = useRef(null); // Referencja dla panelu, aby go wykrywać
+
+  useEffect(() => {
+    // Funkcja wykrywająca kliknięcie na zewnątrz panelu
+    const handleClickOutside = (event) => {
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        setShowBasemaps(false); // Zamknij panel
+      }
+    };
+
+    // Dodaj globalny "click listener"
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      // Wyczyść listener po odmontowaniu komponentu
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
       <button
-        onClick={() => setShowBasemaps((prev) => !prev)}
-        title="Toggle Basemap selection panel visibility"
+        onClick={(e) => {
+          e.stopPropagation(); // Zapobiega propagacji zdarzenia
+          setShowBasemaps((prev) => !prev);
+        }}
         style={{
           position: 'absolute',
           top: '10px',
@@ -54,13 +73,16 @@ export const BasemapContainer = ({ basemapState, handleBasemapChange }) => {
           borderRadius: '50%',
           cursor: 'pointer',
         }}
-        title="Toggle Basemaps"
+        data-tooltip="Toggle Basemaps"
+        data-position="left"
       >
         <i className="bi bi-map"></i>
       </button>
 
       {showBasemaps && (
         <div
+          ref={panelRef} // Referencja do panelu
+          onClick={(e) => e.stopPropagation()} // Zapobiega zamknięciu po kliknięciu wewnętrznym
           style={{
             position: 'absolute',
             top: '70px',

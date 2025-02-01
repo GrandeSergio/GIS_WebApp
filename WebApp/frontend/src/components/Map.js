@@ -131,7 +131,6 @@ const MapComponent = () => {
             layer.isVector &&
             labelHandlerRef.current
           ) {
-            console.log(`Refreshing labels on moveend for layer: ${layer.id}`);
             labelHandlerRef.current.refreshLabels(layer.id);
           }
         });

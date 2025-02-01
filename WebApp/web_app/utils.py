@@ -2,6 +2,23 @@ from django.http import JsonResponse
 from django.db import connection
 import json
 
+class BaseModel:
+    @staticmethod
+    def fetch_all(query):
+        """
+        Generyczna metoda do pobierania wszystkich rekordów z podanej tabeli.
+        """
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                columns = [col[0] for col in cursor.description]  # Pobierz nazwy kolumn
+                results = [
+                    dict(zip(columns, row)) for row in cursor.fetchall()
+                ]
+            return results
+        except Exception as e:
+            print(f"Błąd podczas pobierania rekordów z {query}: {e}")
+            return []
 
 def execute_geojson_query(sql_query):
     """

@@ -1,0 +1,8 @@
+.hover-effect {
+   transition: background-color 0.3s ease, box-shadow 0.2s ease;
+}
+
+.hover-effect:hover {
+   background-color: #d3d4d5;
+   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}

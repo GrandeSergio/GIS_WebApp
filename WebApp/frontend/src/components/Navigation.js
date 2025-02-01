@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { SmallSpinner } from './Loader';
-import WmsIcon from '../icons/wms.svg';
 import { SketchPicker } from 'react-color';
-import Style from 'ol/style/Style';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
 import { StyleHandler, LabelHandler } from '../handlers/LayerHandler';
 import { useEffect, useRef } from 'react';
+import '../styles/Tooltip.module.css';
+import '../styles/Hoover.css';
 
 /**
  * Navigation component to manage layers, their attributes, styles, and related functionalities.
@@ -49,38 +47,28 @@ const Navigation = ({
   const [isReorderEnabled, setReorderEnabled] = useState(false);
 
   /**
-   * State to track the loading status of individual layers.
+   * State to track the active colors for each layer.
    */
-  const [loadingLayers, setLoadingLayers] = useState({});
-
-/**
- * State to track the active colors for each layer.
- */
   const [activeLayerColor, setActiveLayerColor] = useState({});
 
   /**
- * State to track the visibility of the color picker for each layer.
- */
+   * State to track the visibility of the color picker for each layer.
+   */
   const [showColorPicker, setShowColorPicker] = useState({});
 
   /**
- * State to manage the visibility of the upload modal.
- */
-  const [showUploadModal, setShowUploadModal] = useState(false);
-
-  /**
- * State to track whether a layer's name is being edited.
- */
+   * State to track whether a layer's name is being edited.
+   */
   const [isEditing, setIsEditing] = useState({});
 
   /**
- * State to store the temporary editable name of a layer.
- */
+   * State to store the temporary editable name of a layer.
+   */
   const [editableName, setEditableName] = useState({});
 
-/**
- * Handles style-related operations for layers.
- */
+  /**
+   * Handles style-related operations for layers.
+   */
   const styleHandler = new StyleHandler(
     layers,
     setActiveLayerColor,
@@ -88,41 +76,36 @@ const Navigation = ({
   );
 
   /**
- * Handles label-related operations for layers.
- */
-  const labelHandler = new LabelHandler(layers, activeLayerColor);
-
-  /**
- * State to manage the visibility of the label panel and associated layer data.
- */
+   * State to manage the visibility of the label panel and associated layer data.
+   */
   const [labelPanel, setLabelPanel] = useState({
     isOpen: false,
     layerId: null,
   });
 
-/**
- * State to store available attributes of the currently selected vector layer.
- */
+  /**
+   * State to store available attributes of the currently selected vector layer.
+   */
   const [currentAttributes, setCurrentAttributes] = useState([]);
 
   /**
- * Mutable reference to the LabelHandler instance for dynamic use.
- */
+   * Mutable reference to the LabelHandler instance for dynamic use.
+   */
   const labelHandlerRef = useRef(null);
 
   /**
- * Function to close the label panel.
- */
+   * Function to close the label panel.
+   */
   const closeLabelPanel = () => {
     setLabelPanel({ isOpen: false, layerId: null });
   };
 
-/**
- * Function to open the label panel for a specific layer.
- * If the layer is a vector type, retrieves and filters its attributes excluding `geometry`.
- *
- * @param {string} layerId - The ID of the layer to open the label panel for.
- */
+  /**
+   * Function to open the label panel for a specific layer.
+   * If the layer is a vector type, retrieves and filters its attributes excluding `geometry`.
+   *
+   * @param {string} layerId - The ID of the layer to open the label panel for.
+   */
   const openLabelPanel = (layerId) => {
     setLabelPanel({ isOpen: true, layerId });
 
@@ -145,9 +128,9 @@ const Navigation = ({
     }
   };
 
-/**
- * Updates the LabelHandler instance when the `layers` or `activeLayerColor` state changes.
- */
+  /**
+   * Updates the LabelHandler instance when the `layers` or `activeLayerColor` state changes.
+   */
   useEffect(() => {
     labelHandlerRef.current = new LabelHandler(layers, activeLayerColor);
   }, [layers, activeLayerColor]);
@@ -170,7 +153,7 @@ const Navigation = ({
         <Button
           variant="light"
           onClick={() => setShowLayersPanel(!showLayersPanel)}
-          title="Layers"
+          data-tooltip="Layers"
           style={{
             width: '60px',
             height: '60px',
@@ -183,43 +166,12 @@ const Navigation = ({
         >
           <i className="bi bi-layers" style={{ fontSize: '24px' }}></i>
         </Button>
-        {/* Zoom */}
-        <Button
-          variant="light"
-          title="Zoom"
-          style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            marginBottom: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <i className="bi bi-zoom-in" style={{ fontSize: '24px' }}></i>
-        </Button>
-        <Button
-          variant="light"
-          title="Info"
-          style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            marginBottom: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <i className="bi bi-info-circle" style={{ fontSize: '24px' }}></i>
-        </Button>
 
         {/* WMS/WMTS */}
         <Button
           variant="light"
           onClick={openAddWMSLayerModal}
-          title="Add WMS/WMTS Layer"
+          data-tooltip="Add WMS/WMTS Layer"
           style={{
             width: '60px',
             height: '60px',
@@ -246,7 +198,7 @@ const Navigation = ({
         <Button
           variant="light"
           onClick={() => openUploadModal(true)}
-          title="Upload Vector"
+          data-tooltip="Upload Vector"
           style={{
             width: '60px',
             height: '60px',
@@ -289,7 +241,9 @@ const Navigation = ({
                 }
                 size="sm"
                 onClick={() => setReorderEnabled(!isReorderEnabled)}
-                title={isReorderEnabled ? 'Disable Reorder' : 'Enable Reorder'}
+                data-tooltip={
+                  isReorderEnabled ? 'Disable Reorder' : 'Enable Reorder'
+                }
                 style={{ marginLeft: '10px' }}
               >
                 <i
@@ -332,7 +286,7 @@ const Navigation = ({
                 {isReorderEnabled && (
                   <i
                     className="bi bi-arrows-move"
-                    title="Reorder"
+                    data-tooltip="Reorder"
                     style={{
                       marginRight: '10px',
                     }}
@@ -398,7 +352,6 @@ const Navigation = ({
                       variant="outline-secondary"
                       size="sm"
                       id={`dropdown-${layer.id}`}
-                      title="Layer options"
                       style={{
                         border: 'none',
                       }}
@@ -408,6 +361,7 @@ const Navigation = ({
 
                     <Dropdown.Menu>
                       <Dropdown.Item
+                        className="hover-effect"
                         onClick={() => zoomToLayer(layer.id)}
                         disabled={!layer.active || layer.loading}
                       >
@@ -418,6 +372,7 @@ const Navigation = ({
                         Zoom to Layer
                       </Dropdown.Item>
                       <Dropdown.Item
+                        className="hover-effect"
                         onClick={() => showAttributeTable(layer)}
                         disabled={!layer.hasAttributes}
                       >
@@ -474,7 +429,6 @@ const Navigation = ({
                                 [layer.id]: false,
                               }));
                             }}
-                            title="Save"
                           >
                             <i className="bi bi-check"></i>
                           </Button>
@@ -491,13 +445,13 @@ const Navigation = ({
                                 [layer.id]: false,
                               }));
                             }}
-                            title="Cancel"
                           >
                             <i className="bi bi-x"></i>
                           </Button>
                         </div>
                       ) : (
                         <Dropdown.Item
+                          className="hover-effect"
                           onClick={(e) => {
                             e.stopPropagation();
                             setIsEditing((prev) => ({
@@ -515,6 +469,7 @@ const Navigation = ({
                       )}
                       {/* Labeling */}
                       <Dropdown.Item
+                        className="hover-effect"
                         onClick={(e) => {
                           e.stopPropagation();
                           openLabelPanel(layer.id);
@@ -527,8 +482,9 @@ const Navigation = ({
                         ></i>
                         Add Label
                       </Dropdown.Item>
-                        {/* Styling */}
+                      {/* Styling */}
                       <Dropdown.Item
+                        className="hover-effect"
                         onClick={(e) => {
                           e.stopPropagation();
                           styleHandler.toggleColorPicker(layer.id);
@@ -565,7 +521,7 @@ const Navigation = ({
                               size="sm"
                               onClick={closeLabelPanel}
                               style={{ color: 'black', padding: 0 }}
-                              title="Close"
+                              data-tooltip="Close"
                             >
                               <i
                                 className="bi bi-x"
@@ -625,7 +581,7 @@ const Navigation = ({
                                 }))
                               }
                               style={{ color: 'black', padding: 0 }}
-                              title="Close"
+                              data-tooltip="Close"
                             >
                               <i
                                 className="bi bi-x"
