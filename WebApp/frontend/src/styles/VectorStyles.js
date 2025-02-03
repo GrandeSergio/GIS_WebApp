@@ -30,13 +30,13 @@ const baseVectorStyle = (options = {}) => {
     text: new Text({
       font: '14px Arial, sans-serif',
       fill: new Fill({
-        color: 'black', // Kolor tekstu
+        color: 'black',
       }),
       stroke: new Stroke({
-        color: 'white', // Kolor obramowania tekstu
+        color: 'white',
         width: 2,
       }),
-      text: text, // Domyślnie bez tekstu
+      text: text,
     }),
   });
 };
@@ -46,22 +46,19 @@ const getBaseColor = () => {
   const style = baseVectorStyle(); // Pobieramy bazowy styl
   const rgbaColor = style.getFill().getColor();
 
-  // Jeśli kolor jest w formacie string (np. 'rgba(...)'), parsujemy go:
   if (typeof rgbaColor === 'string' && rgbaColor.startsWith('rgba')) {
     const [r, g, b, a] = rgbaColor
-      .replace(/rgba|\(|\)|\s/g, '') // Usuwa 'rgba', nawiasy oraz spacje
-      .split(',') // Dzieli na komponenty RGBA
-      .map(Number); // Konwertuje na liczby
+      .replace(/rgba|\(|\)|\s/g, '')
+      .split(',')
+      .map(Number);
     return { r, g, b, a };
   }
 
-  // Jeśli masz inny format koloru np. array ([r,g,b,a])
   if (Array.isArray(rgbaColor)) {
     const [r, g, b, a] = rgbaColor;
     return { r, g, b, a };
   }
 
-  // Domyślny fallback
   return { r: 0, g: 0, b: 0, a: 1 };
 };
 

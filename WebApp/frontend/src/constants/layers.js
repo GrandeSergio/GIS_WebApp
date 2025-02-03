@@ -1,5 +1,8 @@
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import Style from 'ol/style/Style';
+import Stroke from 'ol/style/Stroke';
+import Fill from 'ol/style/Fill';
 
 /**
  * @typedef {Object} Layer
@@ -24,6 +27,15 @@ export const layers = [
     apiUrl: 'http://localhost:8000/WebApp/api/layers/korytarze/',
     layer: new VectorLayer({
       source: new VectorSource(),
+      style: new Style({
+        stroke: new Stroke({
+          color: 'rgba(0, 123, 255, 0.5)',
+          width: 1,
+        }),
+        fill: new Fill({
+          color: 'rgba(0, 123, 255, 0.5)',
+        }),
+      }),
     }),
   },
   {
@@ -34,6 +46,15 @@ export const layers = [
     apiUrl: 'http://localhost:8000/WebApp/api/layers/jcwprzeczne/',
     layer: new VectorLayer({
       source: new VectorSource(),
+      style: new Style({
+        stroke: new Stroke({
+          color: 'rgba(0, 123, 255, 0.5)',
+          width: 1,
+        }),
+        fill: new Fill({
+          color: 'rgba(0, 123, 255, 0.5)',
+        }),
+      }),
     }),
   },
 ];
