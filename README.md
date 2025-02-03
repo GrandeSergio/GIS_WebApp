@@ -35,7 +35,7 @@ The backend is built using [**Django**]
 
 2. Navigate to the backend directory:
    ```bash
-   cd backend
+   cd WebApp
    ```
 
 3. Create and activate a virtual environment:
@@ -62,8 +62,10 @@ The backend is built using [**Django**]
        }
    }
 
-   ```
-6. Start the development server:
+6. (Optional) Query your data from database in `models.py`, `views.py` and setup endpoints in `urls.py`
+
+
+7. Start the development server:
    ```bash
    python manage.py runserver
    ```
