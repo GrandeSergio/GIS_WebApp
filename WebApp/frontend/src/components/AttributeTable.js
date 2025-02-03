@@ -130,17 +130,16 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
   useEffect(() => {
     const updateWidth = () => {
       if (tableRef.current) {
-        setTableWidth(tableRef.current.scrollWidth); // Pobierz rzeczywistą szerokość tabeli
+        setTableWidth(tableRef.current.scrollWidth);
       }
     };
 
-    updateWidth(); // Ustaw podczas inicjalizacji komponentu
+    updateWidth();
 
-    // Nasłuchiwanie zmiany rozmiaru okna (np. w przypadku resize w przeglądarce)
     window.addEventListener('resize', updateWidth);
 
     return () => {
-      window.removeEventListener('resize', updateWidth); // Usuń nasłuchiwacz, aby unikać wycieków pamięci
+      window.removeEventListener('resize', updateWidth);
     };
   }, [data]);
 
@@ -174,12 +173,12 @@ const AttributeTable = ({ data, onClose, onZoomToFeature }) => {
       }}
     >
       <div
-        ref={resizerRef} // Referencja do resizera
+        ref={resizerRef}
         style={{
           position: 'absolute',
           top: '-5px',
           left: 0,
-          width: `${tableWidth}px`, // Dynamiczna szerokość oparta na szerokości tabeli
+          width: `${tableWidth}px`,
           height: '12px',
           backgroundColor: '#dddddd',
           opacity: 0.7,

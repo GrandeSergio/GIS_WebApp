@@ -43,7 +43,7 @@ const baseVectorStyle = (options = {}) => {
 
 // Function to extract fill color from baseVectorStyle
 const getBaseColor = () => {
-  const style = baseVectorStyle(); // Pobieramy bazowy styl
+  const style = baseVectorStyle();
   const rgbaColor = style.getFill().getColor();
 
   if (typeof rgbaColor === 'string' && rgbaColor.startsWith('rgba')) {

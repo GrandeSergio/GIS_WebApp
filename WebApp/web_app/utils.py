@@ -6,42 +6,42 @@ class BaseModel:
     @staticmethod
     def fetch_all(query):
         """
-        Generyczna metoda do pobierania wszystkich rekordów z podanej tabeli.
+        Generic method to fetch all records from table .
+        :param query: SQL query to fetch records.
         """
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query)
-                columns = [col[0] for col in cursor.description]  # Pobierz nazwy kolumn
+                columns = [col[0] for col in cursor.description]
                 results = [
                     dict(zip(columns, row)) for row in cursor.fetchall()
                 ]
             return results
         except Exception as e:
-            print(f"Błąd podczas pobierania rekordów z {query}: {e}")
+            print(f"Error occurred fetching data using query: {query}: {e}")
             return []
 
 def execute_geojson_query(sql_query):
     """
-    Generyczna metoda do wykonania zapytania SQL i zwrócenia danych w formacie GeoJSON.
-    :param sql_query: Strona zapytania SQL do wykonania
-    :return: JsonResponse z danymi w formacie GeoJSON
+    Generic method to execute sql query and receive response from database with GeoJSON format.
+    :param sql_query: SQL query to fetch records
+    :return: JsonResponse with data in GeoJSON format.
     """
     try:
         with connection.cursor() as cursor:
             cursor.execute(sql_query)
-            columns = [col[0] for col in cursor.description]  # Pobieranie nazw kolumn
-            data = [dict(zip(columns, row)) for row in cursor.fetchall()]  # Pobieranie wyników w formie listy słowników
+            columns = [col[0] for col in cursor.description]
+            data = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-        # Tworzenie struktury GeoJSON
         geojson = {
             "type": "FeatureCollection",
             "features": [
                 {
                     "type": "Feature",
                     "properties": {key: row[key] for key in row if key not in ["geometry", "geom"]},
-                    "geometry": json.loads(row["geometry"])  # Parsowanie geometrii jako JSON
+                    "geometry": json.loads(row["geometry"])
                 }
-                for row in data if row.get("geometry")  # Ignorowanie rekordów z pustą geometrią
+                for row in data if row.get("geometry")
             ]
         }
 

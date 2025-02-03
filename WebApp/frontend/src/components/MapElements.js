@@ -36,20 +36,17 @@ export const EnableInformationButton = ({ infoEnabled, toggleInfo }) => (
  */
 export const BasemapContainer = ({ basemapState, handleBasemapChange }) => {
   const [showBasemaps, setShowBasemaps] = useState(false);
-  const panelRef = useRef(null); // Referencja dla panelu, aby go wykrywać
+  const panelRef = useRef(null);
 
   useEffect(() => {
-    // Funkcja wykrywająca kliknięcie na zewnątrz panelu
     const handleClickOutside = (event) => {
       if (panelRef.current && !panelRef.current.contains(event.target)) {
         setShowBasemaps(false); // Zamknij panel
       }
     };
 
-    // Dodaj globalny "click listener"
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      // Wyczyść listener po odmontowaniu komponentu
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
@@ -58,7 +55,7 @@ export const BasemapContainer = ({ basemapState, handleBasemapChange }) => {
     <div>
       <button
         onClick={(e) => {
-          e.stopPropagation(); // Zapobiega propagacji zdarzenia
+          e.stopPropagation();
           setShowBasemaps((prev) => !prev);
         }}
         style={{
@@ -81,8 +78,8 @@ export const BasemapContainer = ({ basemapState, handleBasemapChange }) => {
 
       {showBasemaps && (
         <div
-          ref={panelRef} // Referencja do panelu
-          onClick={(e) => e.stopPropagation()} // Zapobiega zamknięciu po kliknięciu wewnętrznym
+          ref={panelRef}
+          onClick={(e) => e.stopPropagation()}
           style={{
             position: 'absolute',
             top: '70px',

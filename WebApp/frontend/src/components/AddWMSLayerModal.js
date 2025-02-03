@@ -133,7 +133,7 @@ const AddWMSLayerModal = ({ show, onHide, wmsHandler }) => {
           </Button>
         </Form>
 
-        {/* Wyświetlanie Spinnera lub tabeli */}
+        {/* Spinner and table view */}
         {isLoading ? (
           <div className="d-flex justify-content-center mt-4">
             <SmallSpinner loading={isLoading} />
